@@ -34,10 +34,12 @@ function request(options, callback) {
 
   var options_onResponse = options.onResponse; // Save this for later.
 
+  var body = options.body || null;
   if(typeof options === 'string')
     options = {'uri':options};
   else
     options = JSON.parse(JSON.stringify(options)); // Use a duplicate for mutating.
+  options.body = body;
 
   options.onResponse = options_onResponse // And put it back.
 
