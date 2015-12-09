@@ -78,7 +78,7 @@ function request(options, callback) {
     else if(typeof options.body !== 'string')
       options.body = JSON.stringify(options.body)
   }
-  
+
   //BEGIN QS Hack
   var serialize = function(obj) {
     var str = [];
@@ -88,7 +88,7 @@ function request(options, callback) {
       }
     return str.join("&");
   }
-  
+
   if(options.qs){
     var qs = (typeof options.qs == 'string')? options.qs : serialize(options.qs);
     if(options.uri.indexOf('?') !== -1){ //no get params
@@ -98,7 +98,7 @@ function request(options, callback) {
     }
   }
   //END QS Hack
-  
+
   //BEGIN FORM Hack
   var multipart = function(obj) {
     //todo: support file type (useful?)
@@ -121,7 +121,7 @@ function request(options, callback) {
     result.type = 'multipart/form-data; boundary='+result.boundry;
     return result;
   }
-  
+
   if(options.form){
     if(typeof options.form == 'string') throw('form name unsupported');
     if(options.method === 'POST'){
@@ -207,10 +207,11 @@ function run_xhr(options) {
 
     request.log.debug('State change', {'state':xhr.readyState, 'id':xhr.id, 'timed_out':timed_out})
 
-    if(xhr.readyState === XHR.OPENED) {
+    if(xhr.readyState === XHR.OPENED && !headersSet) {
       request.log.debug('Request started', {'id':xhr.id})
       for (var key in options.headers)
         xhr.setRequestHeader(key, options.headers[key])
+      xhr.headersSet = true;
     }
 
     else if(xhr.readyState === XHR.HEADERS_RECEIVED)
